@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-cr6w0)f8)2lwg=hz9w7*$_6r_3ok*lyds7^cl_c$4jnmq3wwok
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "cs2-pro-predictor.onrender.com",
+    
+]
 
 
 # Application definition
