@@ -4,7 +4,11 @@ from django.conf import settings
 from datetime import datetime
 import os
 
+from pathlib import Path
 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+DB_PATH = BASE_DIR / "cs2_predictor.db"
 
 def get_player_stats( team_1_ids,team_2_ids, map_name, current_date, cursor):
 
@@ -168,7 +172,7 @@ def get_player_stats( team_1_ids,team_2_ids, map_name, current_date, cursor):
 def predict_map(map_name, team_1_ids, team_2_ids):
     current_date = datetime.now()
 
-    connection = sqlite3.connect(settings.DATABASES['default']['NAME'])
+    connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
 
 
