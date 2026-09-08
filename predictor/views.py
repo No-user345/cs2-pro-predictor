@@ -3,20 +3,18 @@ from pathlib import Path
 from django.http import HttpResponse
 import sqlite3
 
-from django.conf import settings
-
 from .predictor import predict_map
 
 # Create your views here.
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 DB_PATH = BASE_DIR / "cs2_predictor.db"
 
 
 
 def fantasy(request):
-    conn = sqlite3.connect(settings.DATABASES['default']['NAME'])
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row 
     cursor = conn.cursor() 
     cursor.execute(""" 
