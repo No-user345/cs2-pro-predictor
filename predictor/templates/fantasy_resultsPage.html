@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fantasy Results</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+        }
+
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .container {
+            max-width: 1400px;
+            margin: 60px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 60px;
+        }
+
+        /* =========================
+           MAP SELECTOR
+        ========================= */
+
+        .map-selector {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 50px;
+        }
+
+        .map-button {
+            background: #222;
+            border: 2px solid transparent;
+            color: #aaa;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: 0.15s;
+        }
+
+        .map-button:hover {
+            background: #292929;
+            border-color: white;
+            color: white;
+        }
+
+        .map-button.active {
+            background: white;
+            color: black;
+            border-color: white;
+        }
+
+        /* =========================
+           SELECTED MAP
+        ========================= */
+
+        .selected-map {
+            margin-bottom: 40px;
+        }
+
+        .selected-map h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        /* =========================
+           PERCENTAGES
+        ========================= */
+
+        .prediction {
+            max-width: 900px;
+            margin: auto;
+            background: #1b1b1b;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 30px;
+        }
+
+        .teams {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .team {
+            flex: 1;
+            text-align: center;
+        }
+
+        .team h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .percentage {
+            font-size: 55px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* =========================
+           BAR
+        ========================= */
+
+        .bar-container {
+            width: 100%;
+            height: 18px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .team-1-bar {
+            background: #4caf50;
+        }
+
+        .team-2-bar {
+            background: #e05252;
+        }
+
+        /* =========================
+           PLAYERS
+        ========================= */
+
+        .lineups {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .lineup {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .lineup h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .player {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #222;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: 0.15s;
+        }
+
+        .player:hover {
+            background: #292929;
+            border-color: white;
+        }
+
+        .player img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        .player-name {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        /* =========================
+           CHANGE LINEUPS
+        ========================= */
+
+        .change-lineups {
+            display: inline-block;
+            margin-top: 50px;
+            padding: 15px 45px;
+            background: white;
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: 0.15s;
+        }
+
+        .change-lineups:hover {
+            background: #ddd;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .teams {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .lineups {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .lineup {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .percentage {
+                font-size: 45px;
+            }
+
+            .map-button {
+                padding: 10px 14px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    
+
+    <div class="container">
+
+        <h1>Fantasy Prediction</h1>
+
+
+        <!-- =========================
+             MAP SELECTOR
+        ========================= -->
+
+        <div class="map-selector">
+
+            <button class="map-button active" onclick="selectMap('Ancient', this)">
+                Ancient
+            </button>
+
+            <button class="map-button" onclick="selectMap('Anubis', this)">
+                Anubis
+            </button>
+
+            <button class="map-button" onclick="selectMap('Dust2', this)">
+                Dust2
+            </button>
+
+            <button class="map-button" onclick="selectMap('Inferno', this)">
+                Inferno
+            </button>
+
+            <button class="map-button" onclick="selectMap('Mirage', this)">
+                Mirage
+            </button>
+
+            <button class="map-button" onclick="selectMap('Nuke', this)">
+                Nuke
+            </button>
+
+            <button class="map-button" onclick="selectMap('Overpass', this)">
+                Overpass
+            </button>
+
+        </div>
+
+
+        <!-- =========================
+             CURRENT MAP
+        ========================= -->
+
+        <div class="selected-map">
+            <h2 id="mapName">Ancient</h2>
+        </div>
+
+
+        <!-- =========================
+             PREDICTION
+        ========================= -->
+
+        <div class="prediction">
+
+            <div class="teams">
+
+                <!-- TEAM 1 -->
+
+                <div class="team">
+
+                    <h3>Your Team</h3>
+
+                    <div
+                        class="percentage"
+                        id="team1Percentage"
+                    >
+                        50%
+                    </div>
+
+                    <div class="bar-container">
+
+                        <div
+                            class="bar team-1-bar"
+                            id="team1Bar"
+                            style="width: 50%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TEAM 2 -->
+
+                <div class="team">
+
+                    <h3>Opponent</h3>
+
+                    <div
+                        class="percentage"
+                        id="team2Percentage"
+                    >
+                        50%
+                    </div>
+
+                    <div class="bar-container">
+
+                        <div
+                            class="bar team-2-bar"
+                            id="team2Bar"
+                            style="width: 50%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             LINEUPS
+        ========================= -->
+
+        <div class="lineups">
+
+            <!-- TEAM 1 -->
+
+            <div class="lineup">
+
+                <h2>Your Team</h2>
+
+                {% for player in team_1 %}
+
+                    <div class="player">
+
+                        {% if player.image_url %}
+
+                            <img
+                                src="{{ player.image_url }}"
+                                alt="{{ player.name }}"
+                            >
+
+                        {% endif %}
+
+                        <div class="player-name">
+                            {{ player.name }}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- TEAM 2 -->
+
+            <div class="lineup">
+
+                <h2>Opponent</h2>
+
+                {% for player in team_2 %}
+
+                    <div class="player">
+
+                        {% if player.image_url %}
+
+                            <img
+                                src="{{ player.image_url }}"
+                                alt="{{ player.name }}"
+                            >
+
+                        {% endif %}
+
+                        <div class="player-name">
+                            {{ player.name }}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="/"
+            class="change-lineups"
+        >
+            Change Lineups
+        </a>
+
+    </div>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script>
+
+        const predictions = {
+        {% for map, prediction in predictions.items %}
+            "{{ map }}": {
+                team1: {{ prediction.team1 }},
+                team2: {{ prediction.team2 }}
+            },
+        {% endfor %}
+    };
+
+
+        function selectMap(mapName, button) {
+
+            /*
+             * Update active button
+             */
+
+            document
+                .querySelectorAll(".map-button")
+                .forEach(btn => {
+                    btn.classList.remove("active");
+                });
+
+            button.classList.add("active");
+
+
+            /*
+             * Get prediction for map
+             */
+
+            const prediction = predictions[mapName];
+
+
+            /*
+             * Update map name
+             */
+
+            document.getElementById("mapName").textContent = mapName;
+
+
+            /*
+             * Update percentages
+             */
+
+            document.getElementById("team1Percentage").textContent =
+                prediction.team1 + "%";
+
+            document.getElementById("team2Percentage").textContent =
+                prediction.team2 + "%";
+
+
+            /*
+             * Update bars
+             */
+
+            document.getElementById("team1Bar").style.width =
+                prediction.team1 + "%";
+
+            document.getElementById("team2Bar").style.width =
+                prediction.team2 + "%";
+        }
+
+    </script>
+
+</body>
+</html>
