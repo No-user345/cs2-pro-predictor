@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "cs2-pro-predictor.onrender.com",
+    "cs2predictor.com",
+    "www.cs2predictor.com",
     
 ]
 
