@@ -3,6 +3,8 @@ from pathlib import Path
 from django.http import HttpResponse
 import sqlite3
 
+from django.conf import settings
+
 from .predictor import predict_map
 
 # Create your views here.
@@ -14,7 +16,7 @@ DB_PATH = BASE_DIR / "cs2_predictor.db"
 
 
 def fantasy(request):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(settings.DATABASES['default']['NAME'])
     conn.row_factory = sqlite3.Row 
     cursor = conn.cursor() 
     cursor.execute(""" 
@@ -152,16 +154,11 @@ def fantasy_results(request):
     predictions["Mirage"]["team1"] = float(f"{mirage_team_1_prob * 100:.3g}")
     predictions["Mirage"]["team2"] = float(f"{mirage_team_2_prob * 100:.3g}")
 
-    print(predictions["Mirage"]["team2"])
-
-    print(mirage_team_1_prob)
-    print(mirage_team_2_prob)
+    
 
     # =========================
     # RESULTS PAGE
     # =========================
-    print(team_1ID)
-    print(team_2ID)
     return render(request, "fantasy_resultsPage.html", {
         "team_1": team_1,
         "team_2": team_2,
