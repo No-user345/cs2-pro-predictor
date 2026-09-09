@@ -24,119 +24,113 @@ def get_player_stats( team_1_ids,team_2_ids, map_name, current_date, cursor):
     for player_id in all_ids:
         cursor.execute("""
             SELECT
-                pms.kills,
-                pms.deaths,
-                pms.rating
+                AVG(pms.kills),
+                AVG(pms.deaths),
+                AVG(pms.rating),
+                COUNT(*)
             FROM player_match_stats pms
             JOIN matches m
                 ON pms.match_id = m.hltv_id
             WHERE pms.player_id = ?
             AND pms.map_name = ?
             AND m.date < ?
-            ORDER BY m.date DESC
         """, (
             player_id,
             map_name,
             current_date,
         ))
 
-        results = cursor.fetchall()
-        if results:
-            map_avg_kills = sum(row[0] for row in results) / len(results)
-            map_avg_deaths = sum(row[1] for row in results) / len(results)
-            map_avg_rating = sum(row[2] for row in results) / len(results)
-        else:
-            map_avg_kills = 0
-            map_avg_deaths = 0
-            map_avg_rating = 0
+        map_avg_kills, map_avg_deaths, map_avg_rating, map_experience = cursor.fetchone()
 
-        map_exsperience = len(results)
+        map_avg_kills = map_avg_kills or 0
+        map_avg_deaths = map_avg_deaths or 0
+        map_avg_rating = map_avg_rating or 0
+
 
         cursor.execute("""
             SELECT
-                pms.kills,
-                pms.deaths,
-                pms.rating
-            FROM player_match_stats pms
-            JOIN matches m
-                ON pms.match_id = m.hltv_id
-            WHERE pms.player_id = ?
-            AND pms.map_name = ?
-            AND m.date < ?
-            ORDER BY m.date DESC
-            LIMIT 10
+                AVG(kills),
+                AVG(deaths),
+                AVG(rating)
+            FROM (
+                SELECT
+                    pms.kills,
+                    pms.deaths,
+                    pms.rating
+                FROM player_match_stats pms
+                JOIN matches m
+                    ON pms.match_id = m.hltv_id
+                WHERE pms.player_id = ?
+                AND pms.map_name = ?
+                AND m.date < ?
+                ORDER BY m.date DESC
+                LIMIT 10
+            )
         """, (
             player_id,
             map_name,
             current_date,
         ))
 
-        results = cursor.fetchall()
-        if results:
-            past_10_map_avg_kills = sum(row[0] for row in results) / len(results)
-            past_10_map_avg_deaths = sum(row[1] for row in results) / len(results)
-            past_10_map_avg_rating = sum(row[2] for row in results) / len(results)
-        else: 
-            past_10_map_avg_kills  = 0
-            past_10_map_avg_deaths = 0
-            past_10_map_avg_rating = 0
+        past_10_map_avg_kills, past_10_map_avg_deaths, past_10_map_avg_rating = cursor.fetchone()
+
+        past_10_map_avg_kills = past_10_map_avg_kills or 0
+        past_10_map_avg_deaths = past_10_map_avg_deaths or 0
+        past_10_map_avg_rating = past_10_map_avg_rating or 0
         
         cursor.execute("""
             SELECT
-                pms.kills,
-                pms.deaths,
-                pms.rating
+                AVG(pms.kills),
+                AVG(pms.deaths),
+                AVG(pms.rating),
+                COUNT(*)
             FROM player_match_stats pms
             JOIN matches m
                 ON pms.match_id = m.hltv_id
             WHERE pms.player_id = ?
             AND m.date < ?
-            ORDER BY m.date DESC
         """, (
             player_id,
             current_date,
         ))
 
-        results = cursor.fetchall()
-        if results:
-            avg_kills = sum(row[0] for row in results) / len(results)
-            avg_deaths = sum(row[1] for row in results) / len(results)
-            avg_rating = sum(row[2] for row in results) / len(results)
-        else:
-            avg_kills  = 0
-            avg_deaths = 0
-            avg_rating = 0
+        avg_kills, avg_deaths, avg_rating, overall_experience = cursor.fetchone()
 
-        overall_exsperience = len(results)
+        avg_kills = avg_kills or 0
+        avg_deaths = avg_deaths or 0
+        avg_rating = avg_rating or 0
+
 
         cursor.execute("""
             SELECT
-                pms.kills,
-                pms.deaths,
-                pms.rating
-            FROM player_match_stats pms
-            JOIN matches m
-                ON pms.match_id = m.hltv_id
-            WHERE pms.player_id = ?
-            AND m.date < ?
-            ORDER BY m.date DESC
-            LIMIT 10
+                AVG(kills),
+                AVG(deaths),
+                AVG(rating)
+            FROM (
+                SELECT
+                    pms.kills,
+                    pms.deaths,
+                    pms.rating
+                FROM player_match_stats pms
+                JOIN matches m
+                    ON pms.match_id = m.hltv_id
+                WHERE pms.player_id = ?
+                AND m.date < ?
+                ORDER BY m.date DESC
+                LIMIT 10
+            )
         """, (
             player_id,
             current_date,
         ))
 
-        results = cursor.fetchall()
-        if results:
-            past_10_avg_kills = sum(row[0] for row in results) / len(results)
-            past_10_avg_deaths = sum(row[1] for row in results) / len(results)
-            past_10_avg_rating = sum(row[2] for row in results) / len(results)
-        else:
-            past_10_avg_kills  = 0
-            past_10_avg_deaths = 0
-            past_10_avg_rating = 0
+        past_10_avg_kills, past_10_avg_deaths, past_10_avg_rating = cursor.fetchone()
 
-        if map_exsperience == 0:
+        past_10_avg_kills = past_10_avg_kills or 0
+        past_10_avg_deaths = past_10_avg_deaths or 0
+        past_10_avg_rating = past_10_avg_rating or 0
+
+        if map_experience == 0:
             map_avg_kills =  avg_kills * 0.7
             map_avg_deaths = avg_deaths / 0.7
             map_avg_rating = avg_rating * 0.7
@@ -162,8 +156,8 @@ def get_player_stats( team_1_ids,team_2_ids, map_name, current_date, cursor):
             past_10_avg_deaths,
             past_10_avg_rating,
 
-            map_exsperience,
-            overall_exsperience
+            map_experience,
+            overall_experience
         ])
 
     return new_stats
