@@ -151,13 +151,13 @@ def fantasy_results(request):
     predictions["Mirage"]["team1"] = float(f"{mirage_team_1_prob * 100:.3g}")
     predictions["Mirage"]["team2"] = float(f"{mirage_team_2_prob * 100:.3g}")
 
-    Dust2_team_1_prob , Dust2_team_2_prob= predict_map("Dust2", team_1ID, team_2ID)
-    predictions["Dust2"]["team1"] = float(f"{Dust2_team_1_prob * 100:.3g}")
-    predictions["Dust2"]["team2"] = float(f"{Dust2_team_2_prob * 100:.3g}")
+    #Dust2_team_1_prob , Dust2_team_2_prob= predict_map("Dust2", team_1ID, team_2ID)
+    #predictions["Dust2"]["team1"] = float(f"{Dust2_team_1_prob * 100:.3g}")
+    #predictions["Dust2"]["team2"] = float(f"{Dust2_team_2_prob * 100:.3g}")
 
-    Anubis_team_1_prob , Anubis_team_2_prob= predict_map("Anubis", team_1ID, team_2ID)
-    predictions["Dust2"]["team1"] = float(f"{Anubis_team_1_prob * 100:.3g}")
-    predictions["Dust2"]["team2"] = float(f"{Anubis_team_2_prob * 100:.3g}")
+    #Anubis_team_1_prob , Anubis_team_2_prob= predict_map("Anubis", team_1ID, team_2ID)
+    #predictions["Dust2"]["team1"] = float(f"{Anubis_team_1_prob * 100:.3g}")
+    #predictions["Dust2"]["team2"] = float(f"{Anubis_team_2_prob * 100:.3g}")
     
 
     # =========================
