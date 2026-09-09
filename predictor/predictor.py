@@ -1,7 +1,6 @@
 import sqlite3
 import pickle
 from django.conf import settings
-from datetime import datetime
 import os
 
 from pathlib import Path
@@ -24,20 +23,16 @@ def get_player_stats( team_1_ids,team_2_ids, map_name, current_date, cursor):
     for player_id in all_ids:
         cursor.execute("""
             SELECT
-                AVG(pms.kills),
-                AVG(pms.deaths),
-                AVG(pms.rating),
+                AVG(kills),
+                AVG(deaths),
+                AVG(rating),
                 COUNT(*)
-            FROM player_match_stats pms
-            JOIN matches m
-                ON pms.match_id = m.hltv_id
-            WHERE pms.player_id = ?
-            AND pms.map_name = ?
-            AND m.date < ?
+            FROM player_match_stats 
+            WHERE player_id = ?
+            AND map_name = ?
         """, (
             player_id,
             map_name,
-            current_date,
         ))
 
         map_avg_kills, map_avg_deaths, map_avg_rating, map_experience = cursor.fetchone()
@@ -80,18 +75,14 @@ def get_player_stats( team_1_ids,team_2_ids, map_name, current_date, cursor):
         
         cursor.execute("""
             SELECT
-                AVG(pms.kills),
-                AVG(pms.deaths),
-                AVG(pms.rating),
+                AVG(kills),
+                AVG(deaths),
+                AVG(rating),
                 COUNT(*)
-            FROM player_match_stats pms
-            JOIN matches m
-                ON pms.match_id = m.hltv_id
-            WHERE pms.player_id = ?
-            AND m.date < ?
+            FROM player_match_stats 
+            WHERE player_id = ?
         """, (
             player_id,
-            current_date,
         ))
 
         avg_kills, avg_deaths, avg_rating, overall_experience = cursor.fetchone()
@@ -164,7 +155,6 @@ def get_player_stats( team_1_ids,team_2_ids, map_name, current_date, cursor):
 
 
 def predict_map(map_name, team_1_ids, team_2_ids):
-    current_date = datetime.now()
 
     connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
@@ -190,7 +180,7 @@ def predict_map(map_name, team_1_ids, team_2_ids):
 
 
 
-    match_data = get_player_stats(team_1_ids, team_2_ids, map_name, current_date, cursor)
+    match_data = get_player_stats(team_1_ids, team_2_ids, map_name,  cursor)
 
 
     probabilities = model.predict_proba([match_data])
