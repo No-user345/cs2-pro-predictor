@@ -3,6 +3,7 @@ import pickle
 from django.conf import settings
 import os
 
+from datetime import datetime
 from pathlib import Path
 
 
@@ -155,7 +156,7 @@ def get_player_stats( team_1_ids,team_2_ids, map_name, current_date, cursor):
 
 
 def predict_map(map_name, team_1_ids, team_2_ids):
-
+    current_date = datetime.now()
     connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
 
@@ -180,7 +181,7 @@ def predict_map(map_name, team_1_ids, team_2_ids):
 
 
 
-    match_data = get_player_stats(team_1_ids, team_2_ids, map_name,  cursor)
+    match_data = get_player_stats(team_1_ids, team_2_ids, map_name, current_date, cursor)
 
 
     probabilities = model.predict_proba([match_data])
