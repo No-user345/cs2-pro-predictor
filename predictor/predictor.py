@@ -178,6 +178,10 @@ def predict_map(map_name, team_1_ids, team_2_ids):
 
     if map_name == "Mirage":
         model_file = "mirage_model.pkl"
+    elif map_name == "Dust2":
+         model_file = "Dust2_model.pkl"
+    elif map_name == "Anubis":
+        model_file = "Anubis_model.pkl"
         
 
     model_path = os.path.join(
