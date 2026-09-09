@@ -193,12 +193,15 @@ def predict_map(map_name, team_1_ids, team_2_ids):
     match_data = get_player_stats(team_1_ids, team_2_ids, map_name, current_date, cursor)
 
 
-
     probabilities = model.predict_proba([match_data])
 
     team_1_probability = probabilities[0][1]
     team_2_probability = probabilities[0][0]
 
+    connection.close()
+
     return team_1_probability, team_2_probability
+
+
 
 
